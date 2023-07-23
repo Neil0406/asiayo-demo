@@ -10,9 +10,12 @@
   
 ## 專案說明
 ```
-    1. 
-    2. 
-    3. 
+    1. 使用python - Django Framework建立一支換率轉換API，可透過登入系統進入Swagger API文件並且測試，
+    因為登入系統的緣，這裡選用較輕便的sqlite作為資料庫使用。
+
+    2. 啟動方式可透過Docker(部署) / Runserver(開發)來啟動。
+
+    3. 本專案僅針對function做單元測試，未針對API進行測試。
 ```
 
 ## 版本
@@ -32,7 +35,7 @@ DB: Sqllite
 Add env file
 ```
     >> cd <PATH>/asiayo-demo/
-    >> touch .env (參考.env.example檔案輸入密碼)
+    >> touch .env (參考.env.example檔案輸入帳號 / 密碼)
 ```
 Start Docker
 ```
@@ -46,9 +49,15 @@ Swagger Login
 ```
 
 ## Local 啟動
+Install 
+```
+    >> cd <PATH>/asiayo-demo/asiayo-demo/
+    >> pip3 install -r requirements.txt (Mac可能無法安裝uWSGI，須先將uWSGI移除)
+```
 Create DB
 ```
     >> cd <PATH>/asiayo-demo/asiayo-demo/
+    >> python manage.py makemigrations 
     >> python manage.py migrate
     >> python manage.py collectstatic
 ```

@@ -30,7 +30,7 @@ schema_view = get_schema_view(
       description="ASIAYO_DEMO API",
    ),
     public=True,
-    permission_classes = (IsAdminUser,) #is_staff才可使用
+    permission_classes = (IsAdminUser,)
 )
 
 urlpatterns += [
