@@ -94,7 +94,6 @@ Swagger Login
             [Get]：http://localhost:8000/api/convert_currency?source=USD&target=JPY&amount=$1,525
             [Content-Type]：application/json
             [Header]：{"Authorization": "Bearer <access token>"}
-
 ```
 
 
