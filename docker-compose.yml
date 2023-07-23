@@ -1,0 +1,20 @@
+version: "3.6"
+services:
+  backend:
+    container_name: asiayo_demo_backend
+    build: ./asiayo_demo
+    env_file:
+      - ./.env
+    volumes:
+      - ./asiayo_demo:/project
+    ports:
+      - "8000:8000"
+    networks:
+        - asiayo_demo_net
+    restart: always
+    
+volumes:
+    asiayo_demo:
+networks:
+  asiayo_demo_net:
+    driver: bridge
