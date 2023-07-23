@@ -39,7 +39,7 @@ Add env file
 ```
 Start Docker
 ```
-    >> docker-compose up -d --build
+    >> docker-compose up --build
 ```
 Swagger Login
 ```
