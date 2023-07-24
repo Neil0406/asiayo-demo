@@ -1,5 +1,6 @@
 import re
 from common import errorcode
+from decimal import Decimal, ROUND_HALF_UP
 from demo_source.currency_data import currency_data
 
 def convert_currency(from_currency, to_currency, amount):
@@ -19,7 +20,8 @@ def convert_currency(from_currency, to_currency, amount):
             return code, {"msg": msg, "amount": converted_amount}
         
         conversion_rate = currency_data["currencies"][from_currency][to_currency]
-        converted_amount = amount * conversion_rate
+        converted_amount = Decimal(str(amount)) * Decimal(str(conversion_rate))                #Python浮點數精確度問題處理
+        converted_amount = converted_amount.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
         converted_amount = f"${converted_amount:,.2f}"
         return code, {"msg": "success", "amount": converted_amount}
     except ValueError as v:

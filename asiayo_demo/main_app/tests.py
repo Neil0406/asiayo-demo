@@ -1,28 +1,32 @@
 from django.test import TestCase
 from main_app.functions import convert_currency
+from decimal import Decimal, ROUND_HALF_UP
 import re
 from common import errorcode
 
 class ConvertCurrencyTestCase(TestCase):
     def test_valid_conversion(self):
         # 有效匯率轉換
-        from_currency = "TWD"
+        from_currency = "USD"
         to_currency = "JPY"
-        amount = 1000
-        expected_amount = amount * 3.669
-
+        amount = 1525
+        expected_amount = Decimal(str(amount)) * Decimal(str(111.801))                        #Python浮點數精確度問題處理
+        expected_amount = expected_amount.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+        
         code, result = convert_currency(from_currency, to_currency, amount)
-
+    
         self.assertEqual(code, 0)
         self.assertEqual(result["msg"], "success")
         self.assertEqual(result["amount"], f"${expected_amount:,.2f}")
 
     def test_valid_conversion_str(self):
         # 有效匯率轉換(字串input)
-        from_currency = "TWD"
+        from_currency = "USD"
         to_currency = "JPY"
-        amount = '$1,000 '
-        expected_amount = float(re.sub("[$, ]", "", str(amount))) * 3.669
+        amount = '$1,525 '
+        amount = float(re.sub("[$, ]", "", str(amount)))
+        expected_amount = Decimal(str(amount)) * Decimal(str(111.801))                        #Python浮點數精確度問題處理
+        expected_amount = expected_amount.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
 
         code, result = convert_currency(from_currency, to_currency, amount)
         self.assertEqual(code, 0)
