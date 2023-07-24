@@ -64,7 +64,7 @@ class ConvertCurrencyTestCase(TestCase):
         self.assertEqual(result["msg"], "Invalid amount")
 
     def test_input_type_error(self):
-        # 數入類型錯誤
+        # 輸入類型錯誤
         from_currency = "TWD"
         to_currency = "USD"
         amount = "abc"
