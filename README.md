@@ -11,7 +11,7 @@
 ## 專案說明
 ```
     1. 使用python - Django Framework建立一支換率轉換API，可透過登入系統進入Swagger API文件並且測試，
-    因為登入系統的緣，這裡選用較輕便的sqlite作為資料庫使用。
+    因為登入系統的緣故，這裡選用較輕便的sqlite作為資料庫使用。
 
     2. 啟動方式可透過Docker(部署) / Runserver(開發)來啟動。
 
