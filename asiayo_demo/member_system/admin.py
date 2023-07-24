@@ -7,12 +7,14 @@ from member_system.models import MemberAccount
 
 
 class UserCreationForm(forms.ModelForm):
-    password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
-    password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
+    password1 = forms.CharField(label="Password", widget=forms.PasswordInput)
+    password2 = forms.CharField(
+        label="Password confirmation", widget=forms.PasswordInput
+    )
 
     class Meta:
         model = MemberAccount
-        fields = ('email',)
+        fields = ("email",)
 
     def clean_password2(self):
         password1 = self.cleaned_data.get("password1")
@@ -35,7 +37,7 @@ class UserChangeForm(forms.ModelForm):
 
     class Meta:
         model = MemberAccount
-        fields = ('email',)
+        fields = ("email",)
 
     def clean_password(self):
         return self.initial["password"]
@@ -45,25 +47,40 @@ class UserAdmin(BaseUserAdmin):
 
     form = UserChangeForm
     add_form = UserCreationForm
-    #列表顯示的資料
-    list_display = ('email', 'name', 'is_superuser', 'is_staff')
-    #列表右方filter顯示的資料        
-    list_filter = ('email',)          
-    #點選進入後的個人資料                 
+    # 列表顯示的資料
+    list_display = ("email", "name", "is_superuser", "is_staff")
+    # 列表右方filter顯示的資料
+    list_filter = ("email",)
+    # 點選進入後的個人資料
     fieldsets = (
-        (None, {'fields': ('email', 'name', 'password', 'last_login')}),                       
-        ('Permissions', {'fields': ('is_superuser', 'is_staff', 'is_active', 'is_delete')}),  
-    )
-    #新增使用者顯示的資料
-    add_fieldsets = (
-        (None, {
-            'classes': ('wide',),
-            'fields': ('email', 'name', 'password1', 'password2', 'is_superuser', 'is_staff', 'is_active')}    
+        (None, {"fields": ("email", "name", "password", "last_login")}),
+        (
+            "Permissions",
+            {"fields": ("is_superuser", "is_staff", "is_active", "is_delete")},
         ),
     )
-    search_fields = ('email',)
-    ordering = ('email',)
+    # 新增使用者顯示的資料
+    add_fieldsets = (
+        (
+            None,
+            {
+                "classes": ("wide",),
+                "fields": (
+                    "email",
+                    "name",
+                    "password1",
+                    "password2",
+                    "is_superuser",
+                    "is_staff",
+                    "is_active",
+                ),
+            },
+        ),
+    )
+    search_fields = ("email",)
+    ordering = ("email",)
     filter_horizontal = ()
+
 
 admin.site.register(MemberAccount, UserAdmin)
 admin.site.unregister(Group)

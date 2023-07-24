@@ -6,48 +6,53 @@ import sys
 import traceback
 
 RemainDays = settings.LOGS_REMOVE_DAYS
-rotation = '10 mb'
+rotation = "10 mb"
 
 file_path = pathlib.Path(__file__).parent.resolve()
+
 
 class BytesExchange:
     def __init__(self):
         kb = float(1024)
-        self.source = {'kb': kb, 'mb':float(kb ** 2), 'gb':float(kb ** 3), 'tb':float(kb ** 4)}
-        
+        self.source = {
+            "kb": kb,
+            "mb": float(kb ** 2),
+            "gb": float(kb ** 3),
+            "tb": float(kb ** 4),
+        }
+
     def __input_check(self, _bytes, _type):
         check = False
-        if _bytes: 
-            check=True
+        if _bytes:
+            check = True
         if _type:
             _type = _type.lower()
         return check, _bytes, _type
 
-    
     def __exchange(self, _bytes, _type):
         if _type:
-            return '{0:.2f} {1}'.format(_bytes / self.source[_type], _type.upper())
+            return "{0:.2f} {1}".format(_bytes / self.source[_type], _type.upper())
         else:
-            if _bytes < self.source['kb']:
-                return '{0} {1}'.format(_bytes,'Bytes' if 0 == _bytes > 1 else 'Byte')
-            elif self.source['kb'] <= _bytes < self.source['mb']:
-                return '{0:.2f} KB'.format(_bytes / self.source['kb'])
-            elif self.source['mb'] <= _bytes < self.source['gb']:
-                return '{0:.2f} MB'.format(_bytes / self.source['mb'])
-            elif self.source['gb'] <= _bytes < self.source['tb']:
-                return '{0:.2f} GB'.format(_bytes / self.source['gb'])
-            elif self.source['tb'] <= _bytes:
-                return '{0:.2f} TB'.format(_bytes / self.source['tb'])
-    
+            if _bytes < self.source["kb"]:
+                return "{0} {1}".format(_bytes, "Bytes" if 0 == _bytes > 1 else "Byte")
+            elif self.source["kb"] <= _bytes < self.source["mb"]:
+                return "{0:.2f} KB".format(_bytes / self.source["kb"])
+            elif self.source["mb"] <= _bytes < self.source["gb"]:
+                return "{0:.2f} MB".format(_bytes / self.source["mb"])
+            elif self.source["gb"] <= _bytes < self.source["tb"]:
+                return "{0:.2f} GB".format(_bytes / self.source["gb"])
+            elif self.source["tb"] <= _bytes:
+                return "{0:.2f} TB".format(_bytes / self.source["tb"])
+
     def main(self, _bytes=None, _type=None):
         msg = None
-        ret = None 
-        check,_bytes, _type = self.__input_check(_bytes, _type)
+        ret = None
+        check, _bytes, _type = self.__input_check(_bytes, _type)
         if check:
             _bytes = float(_bytes)
             ret = self.__exchange(_bytes, _type)
         else:
-            msg = 'Not Frond bytes data'
+            msg = "Not Frond bytes data"
         return msg, ret
 
 
@@ -58,31 +63,31 @@ class logswriter:
         FileName,
         LogPath=str(file_path).replace("/common", "") + "/logs/",
         RemainDays=RemainDays,
-        rotation= rotation
+        rotation=rotation,
     ):
         self.system_name = SystemName
         self.file_name = FileName
         self.log_path = LogPath
         self.system_path = LogPath + self.system_name + "/"
         self.remaindays = RemainDays
-        
-        rotation = rotation.split(' ')
+
+        rotation = rotation.split(" ")
         self.bytes = float(rotation[0])
         self.type = rotation[1]
         self.BytesExchange_ = BytesExchange()
 
         self.remove_log()
-        
+
     def rotation_check(self, log_path):
         check = False
         b = os.path.getsize(log_path)
-        _, ret = self.BytesExchange_ .main(_bytes=b, _type=self.type)
+        _, ret = self.BytesExchange_.main(_bytes=b, _type=self.type)
         if ret:
-            if float(ret.split(' ')[0]) > self.bytes:
+            if float(ret.split(" ")[0]) > self.bytes:
                 check = True
         return check
 
-    def write_log(self, massage=None, status='INFO', error_path=None):
+    def write_log(self, massage=None, status="INFO", error_path=None):
         log_dt = datetime.now().strftime("%Y%m%d")
         log_path = f"{self.system_path}{self.file_name}_{log_dt}.log"
         try:
@@ -91,15 +96,21 @@ class logswriter:
             except:
                 check = True
             if check:
-                active = 'w+'
+                active = "w+"
             else:
-                active = 'a+'
+                active = "a+"
             with open(log_path, active) as f:
                 if not error_path:
-                    f.write(f'[{status}][{datetime.now().strftime("%Y-%m-%-d %H:%M:%S")}]: {str(massage)}\n')
+                    f.write(
+                        f'[{status}][{datetime.now().strftime("%Y-%m-%-d %H:%M:%S")}]: {str(massage)}\n'
+                    )
                 else:
-                    f.write(f'[{status}][{datetime.now().strftime("%Y-%m-%-d %H:%M:%S")}][{str(error_path)}]: {str(massage)}\n')
-                    print(f'[{status}][{datetime.now().strftime("%Y-%m-%-d %H:%M:%S")}][{str(error_path)}]: {str(massage)}')
+                    f.write(
+                        f'[{status}][{datetime.now().strftime("%Y-%m-%-d %H:%M:%S")}][{str(error_path)}]: {str(massage)}\n'
+                    )
+                    print(
+                        f'[{status}][{datetime.now().strftime("%Y-%m-%-d %H:%M:%S")}][{str(error_path)}]: {str(massage)}'
+                    )
         except Exception as e:
             pass
 
@@ -121,12 +132,12 @@ class logswriter:
             self.write_log(f"Create Folder")
 
     def get_msg_info(self):
-        _, _, n3 = sys.exc_info() #取得Call Stack
-        last_call_stack =  traceback.extract_tb(n3)[-1] # 取得Call Stack 最近一筆的內容
-        file = last_call_stack[0] # 取得發生 d事件的檔名 d
-        file = '.'.join(file.split('/')[-3:])
-        line_num = last_call_stack[1] # 取得發生事件的行數
-        func_name = last_call_stack[2] # 取得發生事件的函數名稱
+        _, _, n3 = sys.exc_info()  # 取得Call Stack
+        last_call_stack = traceback.extract_tb(n3)[-1]  # 取得Call Stack 最近一筆的內容
+        file = last_call_stack[0]  # 取得發生 d事件的檔名 d
+        file = ".".join(file.split("/")[-3:])
+        line_num = last_call_stack[1]  # 取得發生事件的行數
+        func_name = last_call_stack[2]  # 取得發生事件的函數名稱
         # print(last_call_stack[:])
         return file, line_num, func_name
 

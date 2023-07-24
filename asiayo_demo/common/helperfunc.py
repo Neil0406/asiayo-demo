@@ -10,19 +10,19 @@ def api_response(
     result=None,
     status=http_status.HTTP_200_OK,
     code=errorcode.OK,
-    message='success',
+    message="success",
     **kargs
 ):
     content = {}
     if type(result) == dict:
         content.update(result)
     else:
-        content['data'] = result
+        content["data"] = result
 
     if "code" not in content:
         content["code"] = code
     if "msg" not in content:
-        content['msg'] = message
+        content["msg"] = message
     return Response(content, status=status, content_type="application/json", **kargs)
 
 
@@ -44,5 +44,3 @@ def get_request_input(request, method="POST", required_data=[], router={}):
     if request._read_started:
         request._read_started = False
     return input_data, router
-
-
